@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "494767165341",
+    "firebase_url": "https://mlkitdemo-asmaamir.firebaseio.com",
+    "project_id": "mlkitdemo-asmaamir",
+    "storage_bucket": "mlkitdemo-asmaamir.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494767165341:android:d481987a493d1f1adda974",
+        "android_client_info": {
+          "package_name": "com.asmaamir.mlkitdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494767165341-0da5dk4nd7t7md0usj4qgt7f0a0j2atj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWPFZqDwGY0v1cGXveL0lkBtyLodMfEy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494767165341-0da5dk4nd7t7md0usj4qgt7f0a0j2atj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
