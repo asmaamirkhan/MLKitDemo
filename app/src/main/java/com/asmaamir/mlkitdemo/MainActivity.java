@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.camerax:
                             switchActivity(CameraxActivity.class);
                             return true;
+                        case R.id.face_detection:
+                            switchActivity(FaceDetectionActivity.class);
+                            return true;
                         default:
                             return false;
                     }

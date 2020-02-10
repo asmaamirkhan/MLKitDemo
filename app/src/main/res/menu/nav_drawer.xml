@@ -9,4 +9,12 @@
                 android:title="@string/cam_analyze" />
         </menu>
     </item>
+    <item android:title="@string/mlkit">
+        <menu>
+            <item
+                android:id="@+id/face_detection"
+                android:icon="@drawable/face_icon"
+                android:title="@string/face_detection" />
+        </menu>
+    </item>
 </menu>
