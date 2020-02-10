@@ -1,8 +1,11 @@
 package com.asmaamir.mlkitdemo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraX;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureConfig;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
@@ -11,11 +14,16 @@ import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PERMISSION = 10;
     private static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
     private static TextureView tv;
+    private static final String TAG = "MAIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startCamera() {
-        PreviewConfig pc = new PreviewConfig.Builder().setTargetResolution(new Size(640, 480)).build();
+        PreviewConfig pc = new PreviewConfig
+                .Builder()
+                .setTargetResolution(new Size(640, 480))
+                .build();
         Preview preview = new Preview(pc);
         preview.setOnPreviewOutputUpdateListener(output -> {
             ViewGroup vg = (ViewGroup) tv.getParent();
@@ -73,7 +85,34 @@ public class MainActivity extends AppCompatActivity {
             tv.setSurfaceTexture(output.getSurfaceTexture());
             updateTransform();
         });
-        CameraX.bindToLifecycle(this, preview);
+
+        ImageCaptureConfig icc = new ImageCaptureConfig
+                .Builder()
+                .setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
+                .build();
+        ImageCapture imgCap = new ImageCapture(icc);
+        ImageButton ib = findViewById(R.id.img_cap);
+        ib.setOnClickListener(v -> {
+            File file = new File(getExternalMediaDirs()[0],  System.currentTimeMillis() + ".jpg");
+            imgCap.takePicture(file, (command -> {
+                command.run();
+            }), new ImageCapture.OnImageSavedListener() {
+                @Override
+                public void onImageSaved(@NonNull File file) {
+                    //Toast.makeText(getBaseContext(), "DONE", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, file.getAbsolutePath());
+                }
+
+                @Override
+                public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError, @NonNull String message, @Nullable Throwable cause) {
+                    //Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, message);
+                }
+            });
+        });
+
+
+        CameraX.bindToLifecycle(this, preview, imgCap);
     }
 
     private void updateTransform() {
