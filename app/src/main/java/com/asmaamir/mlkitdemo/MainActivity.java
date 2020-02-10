@@ -28,8 +28,8 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_PERMISSION = 10;
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
+    private static final int REQUEST_CODE_PERMISSION = 101;
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
     private static TextureView tv;
     private static final String TAG = "MAIN_ACTIVITY";
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         ImageCapture imgCap = new ImageCapture(icc);
         ImageButton ib = findViewById(R.id.img_cap);
         ib.setOnClickListener(v -> {
-            File file = new File(getExternalMediaDirs()[0],  System.currentTimeMillis() + ".jpg");
+            File file = new File(Environment.getExternalStorageDirectory() + "/" + System.currentTimeMillis() + ".png");
             imgCap.takePicture(file, (command -> {
                 command.run();
             }), new ImageCapture.OnImageSavedListener() {
