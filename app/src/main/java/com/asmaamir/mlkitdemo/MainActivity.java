@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraX;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageAnalysisConfig;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureConfig;
 import androidx.camera.core.Preview;
@@ -112,9 +114,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         });
+        ImageAnalysisConfig iac = new ImageAnalysisConfig
+                .Builder()
+                .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
+                .build();
 
+        ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
+        imageAnalysis.setAnalyzer(command -> {
+            command.run();
+        }, new DemoAnalyzer());
 
-        CameraX.bindToLifecycle(this, preview, imgCap);
+        CameraX.bindToLifecycle(this, preview, imgCap, imageAnalysis);
     }
 
     private void updateTransform() {
