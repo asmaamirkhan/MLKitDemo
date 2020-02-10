@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MLKitDemo</string>
+    <string name="camerax">CameraX</string>
+    <string name="cam_analyze">Camera with analyzer</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

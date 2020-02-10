@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/camerax">
+        <menu>
+            <item
+                android:id="@+id/camerax"
+                android:icon="@drawable/camera"
+                android:title="@string/cam_analyze" />
+        </menu>
+    </item>
+</menu>
