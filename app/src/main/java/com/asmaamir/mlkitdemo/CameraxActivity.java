@@ -1,5 +1,6 @@
 package com.asmaamir.mlkitdemo;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -15,7 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraInfoUnavailableException;
 import androidx.camera.core.CameraX;
+import androidx.camera.core.CameraX.LensFacing;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageAnalysisConfig;
 import androidx.camera.core.ImageCapture;
@@ -27,11 +30,18 @@ import androidx.core.content.ContextCompat;
 
 import java.io.File;
 
+
+/*
+ * Example: https://codelabs.developers.google.com/codelabs/camerax-getting-started/#0
+ */
+
 public class CameraxActivity extends AppCompatActivity {
-    private static TextureView tv;
+    private TextureView tv;
     private static final String TAG = "CameraxActivity";
     public static final int REQUEST_CODE_PERMISSION = 101;
     public static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+    public static LensFacing lens = LensFacing.FRONT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +53,36 @@ public class CameraxActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
         }
-        tv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            updateTransform();
+        tv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> updateTransform());
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void startCamera() {
+        initCamera();
+        ImageButton ibSwitch = findViewById(R.id.btn_switch);
+        ibSwitch.setOnClickListener(v -> {
+            if (lens == LensFacing.FRONT)
+                lens = LensFacing.BACK;
+            else
+                lens = LensFacing.FRONT;
+            try {
+                Log.i(TAG, "" + lens);
+                CameraX.getCameraWithLensFacing(lens);
+                initCamera();
+            } catch (CameraInfoUnavailableException e) {
+                Log.e(TAG, e.toString());
+            }
         });
     }
 
-    private void startCamera() {
+    private void initCamera() {
+        CameraX.unbindAll();
         PreviewConfig pc = new PreviewConfig
                 .Builder()
+                .setLensFacing(lens)
                 .setTargetResolution(new Size(tv.getWidth(), tv.getHeight()))
                 .build();
+
         Preview preview = new Preview(pc);
         preview.setOnPreviewOutputUpdateListener(output -> {
             ViewGroup vg = (ViewGroup) tv.getParent();
@@ -61,24 +91,20 @@ public class CameraxActivity extends AppCompatActivity {
             tv.setSurfaceTexture(output.getSurfaceTexture());
             updateTransform();
         });
-
         ImageCaptureConfig icc = new ImageCaptureConfig
                 .Builder()
+                .setLensFacing(lens)
                 .setCaptureMode(ImageCapture.CaptureMode.MAX_QUALITY)
                 .build();
         ImageCapture imgCap = new ImageCapture(icc);
         ImageButton ib = findViewById(R.id.img_cap);
         ib.setOnClickListener(v -> {
             File file = new File(Environment.getExternalStorageDirectory() + "/" + System.currentTimeMillis() + ".png");
-            imgCap.takePicture(file, (command -> {
-                command.run();
-            }), new ImageCapture.OnImageSavedListener() {
+            imgCap.takePicture(file, (Runnable::run), new ImageCapture.OnImageSavedListener() {
                 @Override
                 public void onImageSaved(@NonNull File file) {
                     String msg = "Image is saved at: " + file.getAbsolutePath();
-                    runOnUiThread(() -> {
-                        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
-                    });
+                    runOnUiThread(() -> Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show());
                     Log.i(TAG, msg);
                 }
 
@@ -90,14 +116,13 @@ public class CameraxActivity extends AppCompatActivity {
         });
         ImageAnalysisConfig iac = new ImageAnalysisConfig
                 .Builder()
+                .setLensFacing(lens)
                 .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
                 .build();
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
-        imageAnalysis.setAnalyzer(command -> {
-            command.run();
-        }, new DemoAnalyzer());
-
+        imageAnalysis.setAnalyzer(Runnable::run,
+                new DemoAnalyzer());
         CameraX.bindToLifecycle(this, preview, imgCap, imageAnalysis);
     }
 

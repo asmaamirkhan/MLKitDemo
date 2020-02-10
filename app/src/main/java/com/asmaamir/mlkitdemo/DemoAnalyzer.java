@@ -11,6 +11,6 @@ public class DemoAnalyzer implements ImageAnalysis.Analyzer {
     @Override
     public void analyze(ImageProxy image, int rotationDegrees) {
         long currentTimeStamp = System.currentTimeMillis();
-        Log.e(TAG, "" + currentTimeStamp);
+        Log.i(TAG, "" + currentTimeStamp);
     }
 }
