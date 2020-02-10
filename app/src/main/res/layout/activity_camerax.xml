@@ -5,16 +5,24 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="#212121"
+    tools:context=".CameraxActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
+        <TextureView
+            android:id="@+id/texture_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/img_cap"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/camera"
+            android:layout_alignParentBottom="true"
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
