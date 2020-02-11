@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TempActivity">
+
+    <TextureView
+        android:id="@+id/texture_view_temp"
+        android:layout_width="640dp"
+        android:layout_height="640dp" />
+
+    <ImageButton
+        android:id="@+id/img_cap_temp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/camera" />
+</LinearLayout>
