@@ -12,9 +12,13 @@
 
         <TextureView
             android:id="@+id/face_texture_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
 
+        <com.asmaamir.mlkitdemo.GraphicOverlay
+            android:id="@+id/grapic_overlay"
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
     </RelativeLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

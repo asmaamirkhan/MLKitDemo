@@ -23,6 +23,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PERMISSION = 101;
     public static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
     private TextureView tv;
+    private GraphicOverlay graphicOverlay;
     private static final String TAG = "FaceDetectionActivity";
 
     @Override
@@ -30,6 +31,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_detection);
         tv = findViewById(R.id.face_texture_view);
+        graphicOverlay = findViewById(R.id.grapic_overlay);
         if (allPermissionsGranted()) {
             tv.post(this::initCamera);
         } else {
@@ -63,7 +65,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
         imageAnalysis.setAnalyzer(Runnable::run,
-                new MLKitAnalyzer());
+                new MLKitAnalyzer(this, tv, graphicOverlay));
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
