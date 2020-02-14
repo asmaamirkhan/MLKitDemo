@@ -18,7 +18,6 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.common.FirebaseVisionPoint;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
-import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 
@@ -35,6 +34,8 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private Bitmap bitmap;
     private Canvas canvas;
     private Paint dotPaint, linePaint;
+    private float widthScaleFactor = 1.0f;
+    private float heightScaleFactor = 1.0f;
 
     MLKitAnalyzer(Context context, TextureView tv, ImageView iv) {
         this.context = context;
@@ -67,6 +68,8 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         linePaint.setColor(Color.GREEN);
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(2f);
+        widthScaleFactor = canvas.getWidth() / (tv.getWidth() * 1.0f);
+        heightScaleFactor = canvas.getHeight() / (tv.getHeight() * 1.0f);
     }
 
     private void initDetector() {
@@ -97,8 +100,17 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private void processFaces(List<FirebaseVisionFace> faces) {
         Log.e(TAG, tv.getWidth() + "  " + tv.getHeight() + "   " + iv.getWidth() + "   " + iv.getHeight());
         for (FirebaseVisionFace face : faces) {
-            canvas.drawRect(face.getBoundingBox(), linePaint);
-            drawContours(face.getContour(FirebaseVisionFaceContour.FACE).getPoints());
+            //canvas.drawRect(face.getBoundingBox(), linePaint);
+            float x = translateX(face.getBoundingBox().centerX());
+            float y = translateY(face.getBoundingBox().centerY());
+            float xOffset = scaleX(face.getBoundingBox().width() / 2.0f);
+            float yOffset = scaleY(face.getBoundingBox().height() / 2.0f);
+            float left = x - xOffset;
+            float top = y - yOffset;
+            float right = x + xOffset;
+            float bottom = y + yOffset;
+            canvas.drawRect(left, top, right, bottom, linePaint);
+            /*drawContours(face.getContour(FirebaseVisionFaceContour.FACE).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYE).getPoints());
@@ -110,9 +122,29 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
             drawContours(face.getContour(FirebaseVisionFaceContour.UPPER_LIP_BOTTOM).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.UPPER_LIP_TOP).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.NOSE_BRIDGE).getPoints());
-            drawContours(face.getContour(FirebaseVisionFaceContour.NOSE_BOTTOM).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.NOSE_BOTTOM).getPoints());*/
         }
         iv.setImageBitmap(bitmap);
+    }
+
+    public float scaleY(float vertical) {
+        return vertical * heightScaleFactor;
+    }
+
+    public float scaleX(float horizontal) {
+        return horizontal * widthScaleFactor;
+    }
+
+    public float translateY(float y) {
+        return scaleY(y);
+    }
+
+    public float translateX(float x) {
+        //if (overlay.facing == CameraSource.CAMERA_FACING_FRONT) {
+        //return canvas.getWidth() - scaleX(x);
+        // } else {
+        return scaleX(x);
+        //}
     }
 
     private void drawContours(List<FirebaseVisionPoint> points) {
