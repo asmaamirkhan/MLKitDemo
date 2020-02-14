@@ -2,12 +2,13 @@ package com.asmaamir.mlkitdemo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.media.Image;
 import android.util.Log;
 import android.view.TextureView;
+import android.widget.ImageView;
 
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -16,7 +17,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.common.FirebaseVisionPoint;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 
@@ -29,12 +32,15 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private Context context;
     private TextureView tv;
     private Image img;
-    private GraphicOverlay graphicOverlay;
+    private ImageView iv;
+    private Bitmap bitmap;
+    private Canvas canvas;
+    private Paint dotPaint, linePaint;
 
-    MLKitAnalyzer(Context context, TextureView tv, GraphicOverlay graphicOverlay) {
+    MLKitAnalyzer(Context context, TextureView tv, ImageView iv) {
         this.context = context;
         this.tv = tv;
-        this.graphicOverlay = graphicOverlay;
+        this.iv = iv;
     }
 
     @Override
@@ -45,41 +51,23 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         img = image.getImage();
         int rotation = degreesToFirebaseRotation(rotationDegrees);
         FirebaseVisionImage fbImage = FirebaseVisionImage.fromMediaImage(img, rotation);
+        initDrawingUtils();
         initDetector();
         detectFaces(fbImage);
     }
 
-    private void detectFaces(FirebaseVisionImage fbImage) {
-        Bitmap overlay = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(), Bitmap.Config.ARGB_8888);
-        Task<List<FirebaseVisionFace>> result = faceDetector
-                .detectInImage(fbImage)
-                .addOnSuccessListener(firebaseVisionFaces -> {
-                    Log.i(TAG, "" + firebaseVisionFaces.size());
-                    if (!firebaseVisionFaces.isEmpty()) {
-                        Paint paint = new Paint();
-                        paint.setStyle(Paint.Style.STROKE);
-                        paint.setAntiAlias(true);
-                        paint.setColor(Color.RED);
-                        paint.setStrokeWidth(10f);
-                        for (FirebaseVisionFace face : firebaseVisionFaces) {
-
-                            Rect bounds = face.getBoundingBox();
-                            RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
-                            graphicOverlay.add(rectOverlay);
-                            /*float rotZ = face.getHeadEulerAngleZ();
-                            float rotY = face.getHeadEulerAngleY();
-                            FirebaseVisionFaceLandmark leftEar = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR);
-                            if (leftEar != null) {
-                                FirebaseVisionPoint leftEarPos = leftEar.getPosition();
-                            }
-                            List<FirebaseVisionPoint> leftEyeContour = face.getContour(FirebaseVisionFaceContour.LEFT_EYE).getPoints();
-                            List<FirebaseVisionPoint> upperLipContour = face.getContour(FirebaseVisionFaceContour.UPPER_LIP_BOTTOM).getPoints();*/
-
-                        }
-                    }
-                }).addOnFailureListener(e -> {
-                    Log.i(TAG, e.getMessage());
-                });
+    private void initDrawingUtils() {
+        bitmap = Bitmap.createBitmap(iv.getWidth(), iv.getHeight(), Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
+        dotPaint = new Paint();
+        dotPaint.setColor(Color.RED);
+        dotPaint.setStyle(Paint.Style.FILL);
+        dotPaint.setStrokeWidth(2f);
+        dotPaint.setAntiAlias(true);
+        linePaint = new Paint();
+        linePaint.setColor(Color.GREEN);
+        linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setStrokeWidth(2f);
     }
 
     private void initDetector() {
@@ -93,6 +81,54 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
                 .getVisionFaceDetector(detectorOptions);
 
     }
+
+    private void detectFaces(FirebaseVisionImage fbImage) {
+        Bitmap overlay = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(), Bitmap.Config.ARGB_8888);
+        Task<List<FirebaseVisionFace>> result = faceDetector
+                .detectInImage(fbImage)
+                .addOnSuccessListener(firebaseVisionFaces -> {
+                    Log.i(TAG, "" + firebaseVisionFaces.size());
+                    if (!firebaseVisionFaces.isEmpty()) {
+                        processFaces(firebaseVisionFaces);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.i(TAG, e.getMessage());
+                });
+    }
+
+    private void processFaces(List<FirebaseVisionFace> faces) {
+        int counter;
+        for (FirebaseVisionFace face : faces) {
+            drawContours(face.getContour(FirebaseVisionFaceContour.FACE).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYE).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYE).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_TOP).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_TOP).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.LOWER_LIP_BOTTOM).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.LOWER_LIP_TOP).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.UPPER_LIP_BOTTOM).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.UPPER_LIP_TOP).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.NOSE_BRIDGE).getPoints());
+            drawContours(face.getContour(FirebaseVisionFaceContour.NOSE_BOTTOM).getPoints());
+        }
+        iv.setImageBitmap(bitmap);
+    }
+
+    private void drawContours(List<FirebaseVisionPoint> points) {
+        int counter = 0;
+        for (FirebaseVisionPoint point : points) {
+            if (counter != points.size() - 1) {
+                canvas.drawLine(point.getX(), point.getY(), points.get(counter + 1).getX(), points.get(counter + 1).getY(), linePaint);
+            } else {
+                canvas.drawLine(point.getX(), point.getY(), points.get(0).getX(), points.get(0).getY(), linePaint);
+            }
+            counter++;
+            canvas.drawCircle(point.getX(), point.getY(), 6, dotPaint);
+        }
+    }
+
 
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
