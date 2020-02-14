@@ -1,17 +1,21 @@
 package com.asmaamir.mlkitdemo;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraInfoUnavailableException;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageAnalysisConfig;
@@ -36,11 +40,30 @@ public class FaceDetectionActivity extends AppCompatActivity {
         tv = findViewById(R.id.face_texture_view);
         iv = findViewById(R.id.face_image_view);
         if (allPermissionsGranted()) {
-            tv.post(this::initCamera);
+            tv.post(this::startCamera);
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
         }
         tv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> updateTransform());
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void startCamera() {
+        initCamera();
+        ImageButton ibSwitch = findViewById(R.id.btn_switch_face);
+        ibSwitch.setOnClickListener(v -> {
+            if (lens == CameraX.LensFacing.FRONT)
+                lens = CameraX.LensFacing.BACK;
+            else
+                lens = CameraX.LensFacing.FRONT;
+            try {
+                Log.i(TAG, "" + lens);
+                CameraX.getCameraWithLensFacing(lens);
+                initCamera();
+            } catch (CameraInfoUnavailableException e) {
+                Log.e(TAG, e.toString());
+            }
+        });
     }
 
     private void initCamera() {
@@ -48,7 +71,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
         PreviewConfig pc = new PreviewConfig
                 .Builder()
                 .setTargetResolution(new Size(tv.getWidth(), tv.getHeight()))
-                .setLensFacing(CameraX.LensFacing.FRONT)
+                .setLensFacing(lens)
                 .build();
 
         Preview preview = new Preview(pc);
@@ -63,7 +86,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
         ImageAnalysisConfig iac = new ImageAnalysisConfig
                 .Builder()
                 .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
-                .setLensFacing(CameraX.LensFacing.FRONT)
+                .setLensFacing(lens)
                 .build();
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
@@ -104,7 +127,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSION) {
             if (allPermissionsGranted()) {
-                tv.post(this::initCamera);
+                tv.post(this::startCamera);
             } else {
                 Toast.makeText(this,
                         "Permissions not granted by the user.",
