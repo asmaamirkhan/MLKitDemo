@@ -27,6 +27,8 @@ public class FaceDetectionActivity extends AppCompatActivity {
     private ImageView iv;
     private static final String TAG = "FaceDetectionActivity";
 
+    public static CameraX.LensFacing lens = CameraX.LensFacing.FRONT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
