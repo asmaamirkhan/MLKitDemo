@@ -13,7 +13,6 @@ import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
@@ -27,7 +26,6 @@ import java.util.List;
 
 public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private static final String TAG = "MLKitAnalyzer";
-    private FirebaseVisionFaceDetectorOptions detectorOptions;
     private FirebaseVisionFaceDetector faceDetector;
     private TextureView tv;
     private ImageView iv;
@@ -75,18 +73,17 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     }
 
     private void initDetector() {
-        detectorOptions = new FirebaseVisionFaceDetectorOptions
+        FirebaseVisionFaceDetectorOptions detectorOptions = new FirebaseVisionFaceDetectorOptions
                 .Builder()
                 .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
                 .build();
         faceDetector = FirebaseVision
                 .getInstance()
                 .getVisionFaceDetector(detectorOptions);
-
     }
 
     private void detectFaces() {
-        Task<List<FirebaseVisionFace>> result = faceDetector
+        faceDetector
                 .detectInImage(fbImage)
                 .addOnSuccessListener(firebaseVisionFaces -> {
                     if (!firebaseVisionFaces.isEmpty()) {
@@ -94,10 +91,7 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
                     } else {
                         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.MULTIPLY);
                     }
-                }).addOnFailureListener(e -> {
-                    Log.i(TAG, e.getMessage());
-                });
-        //Log.e(TAG, "" + result.getResult().size());
+                }).addOnFailureListener(e -> Log.i(TAG, e.toString()));
     }
 
 
