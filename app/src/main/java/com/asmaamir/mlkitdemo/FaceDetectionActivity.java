@@ -2,11 +2,9 @@ package com.asmaamir.mlkitdemo;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
-import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -44,7 +42,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
         }
-        tv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> updateTransform());
+        // tv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> updateTransform());
     }
 
     @SuppressLint("RestrictedApi")
@@ -80,12 +78,13 @@ public class FaceDetectionActivity extends AppCompatActivity {
             vg.removeView(tv);
             vg.addView(tv, 0);
             tv.setSurfaceTexture(output.getSurfaceTexture());
-            updateTransform();
+            //updateTransform();
         });
 
         ImageAnalysisConfig iac = new ImageAnalysisConfig
                 .Builder()
                 .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
+                .setTargetResolution(new Size(tv.getWidth(), tv.getHeight()))
                 .setLensFacing(lens)
                 .build();
 
@@ -95,7 +94,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
-    private void updateTransform() {
+    /*private void updateTransform() {
         Matrix mat = new Matrix();
         float centerX = tv.getWidth() / 2.0f;
         float centerY = tv.getHeight() / 2.0f;
@@ -117,10 +116,10 @@ public class FaceDetectionActivity extends AppCompatActivity {
             default:
                 return;
         }
-        mat.postRotate(rotationDegrees, centerX, centerY);
+        mat.postRotate(-rotationDegrees, centerX, centerY);
         tv.setTransform(mat);
 
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
