@@ -24,12 +24,12 @@ import androidx.core.content.ContextCompat;
 
 import com.asmaamir.mlkitdemo.R;
 
-public class FaceDetectionActivity extends AppCompatActivity {
+public class RealTimeFaceDetectionActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PERMISSION = 101;
     public static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
     private TextureView tv;
     private ImageView iv;
-    private static final String TAG = "FaceDetectionActivity";
+    private static final String TAG = "RealTimeFaceDetectionActivity";
 
     public static CameraX.LensFacing lens = CameraX.LensFacing.FRONT;
 
