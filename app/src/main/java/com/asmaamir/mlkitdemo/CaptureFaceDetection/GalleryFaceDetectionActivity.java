@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Canvas canvas;
     private Paint dotPaint, linePaint;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         imageView = findViewById(R.id.img_view_pick);
         imageButton = findViewById(R.id.img_btn_pick);
         imageViewCanvas = findViewById(R.id.img_view_pick_canvas);
+        textView = findViewById(R.id.tv_props);
         imageButton.setOnClickListener(v -> {
             pickImage();
         });
@@ -81,6 +84,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(data.getData().getPath().replace("/raw/", ""));
             Bitmap scaledImage = Bitmap.createScaledBitmap(bitmap, imageView.getWidth(), imageView.getHeight(), false);
             //FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(scaledImage);
+            textView.setText("Classes: ");
             try {
                 image = FirebaseVisionImage.fromFilePath(this, data.getData());
                 Log.i(TAG, image.getBitmap().getWidth() + "  " + image.getBitmap().getHeight());
@@ -100,6 +104,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
                 .Builder()
                 .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
                 .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+                .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                 .build();
         FirebaseVisionFaceDetector faceDetector = FirebaseVision
                 .getInstance()
@@ -121,6 +126,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         Log.i(TAG, "Size" + faces.size());
         for (FirebaseVisionFace face : faces) {
             Log.i(TAG, "" + face.getContour(FirebaseVisionFaceContour.ALL_POINTS).getPoints().size() + "  " + image.getBitmap().getWidth());
+            getProps(face);
             drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR));
             drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EAR));
             drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EYE));
@@ -146,6 +152,26 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         }
         imageViewCanvas.setImageBitmap(bitmap);
     }
+
+    private void getProps(FirebaseVisionFace face) {
+        float smileProb = 0, rightEyeOpenProb = 0, leftEyeOpenProb = 0;
+        if (face.getSmilingProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+            smileProb = face.getSmilingProbability();
+        }
+        if (face.getRightEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+            rightEyeOpenProb = face.getRightEyeOpenProbability();
+        }
+        if (face.getLeftEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+            leftEyeOpenProb = face.getRightEyeOpenProbability();
+        }
+        textView.setText(textView.getText()
+                + " " + smileProb
+                + " " + rightEyeOpenProb
+                + " " + leftEyeOpenProb
+                + "\n\n"
+        );
+    }
+
 
     private void drawLandMark(FirebaseVisionFaceLandmark landmark) {
         if (landmark != null) {
