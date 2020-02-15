@@ -36,7 +36,7 @@ public class RealTimeFaceDetectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_face_detection);
+        setContentView(R.layout.activity_real_time_face_detection);
         tv = findViewById(R.id.face_texture_view);
         iv = findViewById(R.id.face_image_view);
         if (allPermissionsGranted()) {

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.asmaamir.mlkitdemo.CameraX.CameraxActivity;
+import com.asmaamir.mlkitdemo.CaptureFaceDetection.CaptureFaceDetectionActivity;
 import com.asmaamir.mlkitdemo.RealTimeFaceDetection.RealTimeFaceDetectionActivity;
 import com.google.android.material.navigation.NavigationView;
 
@@ -45,8 +46,11 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.camerax:
                             switchActivity(CameraxActivity.class);
                             return true;
-                        case R.id.face_detection:
+                        case R.id.realtime_face_detection:
                             switchActivity(RealTimeFaceDetectionActivity.class);
+                            return true;
+                        case R.id.capture_face_detection:
+                            switchActivity(CaptureFaceDetectionActivity.class);
                             return true;
                         default:
                             return false;

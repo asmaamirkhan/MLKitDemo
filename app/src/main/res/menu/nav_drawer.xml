@@ -12,9 +12,13 @@
     <item android:title="@string/mlkit">
         <menu>
             <item
-                android:id="@+id/face_detection"
+                android:id="@+id/realtime_face_detection"
                 android:icon="@drawable/face_icon"
-                android:title="@string/face_detection" />
+                android:title="@string/realtime_face_detection" />
+            <item
+                android:id="@+id/capture_face_detection"
+                android:icon="@drawable/face_icon"
+                android:title="@string/capture_face_detection" />
         </menu>
     </item>
 </menu>

@@ -4,6 +4,7 @@
     <string name="cam_analyze">Camera with analyzer</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="mlkit">ML-Kit</string>
-    <string name="face_detection">Face Detection</string>
+    <string name="mlkit">ML-Kit | Face Detection</string>
+    <string name="realtime_face_detection">Real Time Face Detection</string>
+    <string name="capture_face_detection">Capturing &amp; Face Detection</string>
 </resources>
