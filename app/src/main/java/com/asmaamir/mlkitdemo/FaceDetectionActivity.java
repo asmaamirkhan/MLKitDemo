@@ -77,7 +77,6 @@ public class FaceDetectionActivity extends AppCompatActivity {
             vg.removeView(tv);
             vg.addView(tv, 0);
             tv.setSurfaceTexture(output.getSurfaceTexture());
-            //updateTransform();
         });
 
         ImageAnalysisConfig iac = new ImageAnalysisConfig
@@ -89,7 +88,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
         imageAnalysis.setAnalyzer(Runnable::run,
-                new MLKitAnalyzer(this, tv, iv, lens));
+                new MLKitAnalyzer(tv, iv, lens));
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 

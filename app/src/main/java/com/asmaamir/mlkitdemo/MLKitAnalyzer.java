@@ -1,14 +1,11 @@
 package com.asmaamir.mlkitdemo;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.media.Image;
 import android.util.Log;
-import android.util.Size;
 import android.view.TextureView;
 import android.widget.ImageView;
 
@@ -32,9 +29,7 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private static final String TAG = "MLKitAnalyzer";
     private FirebaseVisionFaceDetectorOptions detectorOptions;
     private FirebaseVisionFaceDetector faceDetector;
-    private Context context;
     private TextureView tv;
-    private Image img;
     private ImageView iv;
     private Bitmap bitmap;
     private Canvas canvas;
@@ -43,11 +38,8 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private float heightScaleFactor = 1.0f;
     private FirebaseVisionImage fbImage;
     private CameraX.LensFacing lens;
-    private Size cachedAnalysisDimens;
-    private Size cachedTargetDimens;
 
-    MLKitAnalyzer(Context context, TextureView tv, ImageView iv, CameraX.LensFacing lens) {
-        this.context = context;
+    MLKitAnalyzer(TextureView tv, ImageView iv, CameraX.LensFacing lens) {
         this.tv = tv;
         this.iv = iv;
         this.lens = lens;
@@ -58,16 +50,12 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         if (image == null || image.getImage() == null) {
             return;
         }
-        //Log.e(TAG, image.getImageInfo().getTag().toString());
-        img = image.getImage();
-        //Log.e(TAG, tv.getWidth() + "  " + tv.getHeight() + "   " + img.getWidth() + "   " + img.getHeight());
-
         int rotation = degreesToFirebaseRotation(rotationDegrees);
-        fbImage = FirebaseVisionImage.fromMediaImage(img, rotation);
+        fbImage = FirebaseVisionImage.fromMediaImage(image.getImage(), rotation);
         initDrawingUtils();
 
         initDetector();
-        detectFaces(fbImage);
+        detectFaces();
     }
 
     private void initDrawingUtils() {
@@ -97,7 +85,7 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
 
     }
 
-    private void detectFaces(FirebaseVisionImage fbImage) {
+    private void detectFaces() {
         Task<List<FirebaseVisionFace>> result = faceDetector
                 .detectInImage(fbImage)
                 .addOnSuccessListener(firebaseVisionFaces -> {
@@ -109,12 +97,12 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
                 }).addOnFailureListener(e -> {
                     Log.i(TAG, e.getMessage());
                 });
+        //Log.e(TAG, "" + result.getResult().size());
     }
 
 
     private void processFaces(List<FirebaseVisionFace> faces) {
         for (FirebaseVisionFace face : faces) {
-            //canvas.drawRect(face.getBoundingBox(), linePaint);
             drawContours(face.getContour(FirebaseVisionFaceContour.FACE).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM).getPoints());
@@ -131,27 +119,6 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         }
         iv.setImageBitmap(bitmap);
     }
-
-    public float scaleY(float vertical) {
-        return vertical * heightScaleFactor;
-    }
-
-    public float scaleX(float horizontal) {
-        return horizontal * widthScaleFactor;
-    }
-
-    public float translateY(float y) {
-        return scaleY(y);
-    }
-
-    public float translateX(float x) {
-        if (lens == CameraX.LensFacing.FRONT) {
-            return canvas.getWidth() - scaleX(x);
-        } else {
-            return scaleX(x);
-        }
-    }
-
 
     private void drawContours(List<FirebaseVisionPoint> points) {
         int counter = 0;
@@ -174,6 +141,25 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         }
     }
 
+    public float scaleY(float vertical) {
+        return vertical * heightScaleFactor;
+    }
+
+    public float scaleX(float horizontal) {
+        return horizontal * widthScaleFactor;
+    }
+
+    public float translateY(float y) {
+        return scaleY(y);
+    }
+
+    public float translateX(float x) {
+        if (lens == CameraX.LensFacing.FRONT) {
+            return canvas.getWidth() - scaleX(x);
+        } else {
+            return scaleX(x);
+        }
+    }
 
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
