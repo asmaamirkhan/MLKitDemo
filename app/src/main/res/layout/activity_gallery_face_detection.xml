@@ -11,30 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextureView
-            android:id="@+id/texture_view_capture"
+        <ImageView
+            android:id="@+id/img_view_pick"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <ImageView
-            android:id="@+id/image_view_capture"
+            android:id="@+id/img_view_pick_canvas"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <ImageButton
-            android:id="@+id/img_cap_capture"
+            android:id="@+id/img_btn_pick"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_alignParentBottom="true"
             android:src="@drawable/camera" />
 
-        <ImageButton
-            android:id="@+id/btn_switch_capture"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/switch_icon" />
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
