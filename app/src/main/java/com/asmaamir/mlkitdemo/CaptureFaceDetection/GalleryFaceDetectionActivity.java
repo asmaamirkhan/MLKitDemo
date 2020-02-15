@@ -28,6 +28,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
 
 import java.io.IOException;
 import java.util.List;
@@ -119,8 +120,16 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private void processFaces(List<FirebaseVisionFace> faces) {
         Log.i(TAG, "Size" + faces.size());
         for (FirebaseVisionFace face : faces) {
-            Log.i(TAG, "" + face.getContour(FirebaseVisionFaceContour.FACE).getPoints().get(0).getX() + "  " + image.getBitmap().getWidth());
-            ;
+            Log.i(TAG, "" + face.getContour(FirebaseVisionFaceContour.ALL_POINTS).getPoints().size() + "  " + image.getBitmap().getWidth());
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EAR));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EYE));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EYE));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_LEFT));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_RIGHT));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_CHEEK));
+            drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_CHEEK));
             drawContours(face.getContour(FirebaseVisionFaceContour.FACE).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM).getPoints());
@@ -138,9 +147,18 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         imageViewCanvas.setImageBitmap(bitmap);
     }
 
+    private void drawLandMark(FirebaseVisionFaceLandmark landmark) {
+        if (landmark != null) {
+            canvas.drawCircle(landmark.getPosition().getX(), landmark.getPosition().getY(), 10, dotPaint);
+        }
+    }
+
     private void drawContours(List<FirebaseVisionPoint> points) {
         int counter = 0;
+        //Log.i(TAG, "" + points.size() + "  " + image.getBitmap().getWidth());
+
         for (FirebaseVisionPoint point : points) {
+
             if (counter != points.size() - 1) {
                 canvas.drawLine(point.getX(),
                         point.getY(),
