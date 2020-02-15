@@ -40,6 +40,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private ImageView imageView;
     private ImageView imageViewCanvas;
     private ImageButton imageButton;
+    private FirebaseVisionImage image;
     private Bitmap bitmap;
     private Canvas canvas;
     private Paint dotPaint, linePaint;
@@ -75,12 +76,12 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_CODE) {
             imageView.setImageURI(data.getData());
-            imageViewCanvas.setImageURI(data.getData());
+            //imageViewCanvas.setImageURI(data.getData());
             Bitmap bitmap = BitmapFactory.decodeFile(data.getData().getPath().replace("/raw/", ""));
             Bitmap scaledImage = Bitmap.createScaledBitmap(bitmap, imageView.getWidth(), imageView.getHeight(), false);
             //FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(scaledImage);
             try {
-                FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(this, data.getData());
+                image = FirebaseVisionImage.fromFilePath(this, data.getData());
                 Log.i(TAG, image.getBitmap().getWidth() + "  " + image.getBitmap().getHeight());
                 initDetector(image);
             } catch (IOException e) {
@@ -97,6 +98,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         FirebaseVisionFaceDetectorOptions detectorOptions = new FirebaseVisionFaceDetectorOptions
                 .Builder()
                 .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
+                .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
                 .build();
         FirebaseVisionFaceDetector faceDetector = FirebaseVision
                 .getInstance()
@@ -117,6 +119,8 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private void processFaces(List<FirebaseVisionFace> faces) {
         Log.i(TAG, "Size" + faces.size());
         for (FirebaseVisionFace face : faces) {
+            Log.i(TAG, "" + face.getContour(FirebaseVisionFaceContour.FACE).getPoints().get(0).getX() + "  " + image.getBitmap().getWidth());
+            ;
             drawContours(face.getContour(FirebaseVisionFaceContour.FACE).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM).getPoints());
             drawContours(face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM).getPoints());
@@ -156,7 +160,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     }
 
     private void initDrawingUtils() {
-        bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(image.getBitmap().getWidth(), image.getBitmap().getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         dotPaint = new Paint();
         dotPaint.setColor(Color.RED);
