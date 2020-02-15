@@ -5,15 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.media.Image;
 import android.util.Log;
 import android.util.Size;
 import android.view.TextureView;
 import android.widget.ImageView;
 
+import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
@@ -39,13 +42,15 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private float widthScaleFactor = 1.0f;
     private float heightScaleFactor = 1.0f;
     private FirebaseVisionImage fbImage;
+    private CameraX.LensFacing lens;
     private Size cachedAnalysisDimens;
     private Size cachedTargetDimens;
 
-    MLKitAnalyzer(Context context, TextureView tv, ImageView iv) {
+    MLKitAnalyzer(Context context, TextureView tv, ImageView iv, CameraX.LensFacing lens) {
         this.context = context;
         this.tv = tv;
         this.iv = iv;
+        this.lens = lens;
     }
 
     @Override
@@ -53,9 +58,9 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         if (image == null || image.getImage() == null) {
             return;
         }
-
+        //Log.e(TAG, image.getImageInfo().getTag().toString());
         img = image.getImage();
-        Log.e(TAG, tv.getWidth() + "  " + tv.getHeight() + "   " + img.getWidth() + "   " + img.getHeight());
+        //Log.e(TAG, tv.getWidth() + "  " + tv.getHeight() + "   " + img.getWidth() + "   " + img.getHeight());
 
         int rotation = degreesToFirebaseRotation(rotationDegrees);
         fbImage = FirebaseVisionImage.fromMediaImage(img, rotation);
@@ -85,7 +90,6 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
         detectorOptions = new FirebaseVisionFaceDetectorOptions
                 .Builder()
                 .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
-                //.setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
                 .build();
         faceDetector = FirebaseVision
                 .getInstance()
@@ -94,16 +98,17 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     }
 
     private void detectFaces(FirebaseVisionImage fbImage) {
-        faceDetector
+        Task<List<FirebaseVisionFace>> result = faceDetector
                 .detectInImage(fbImage)
                 .addOnSuccessListener(firebaseVisionFaces -> {
-                    Log.i(TAG, "" + firebaseVisionFaces.size());
                     if (!firebaseVisionFaces.isEmpty()) {
                         processFaces(firebaseVisionFaces);
+                    } else {
+                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.MULTIPLY);
                     }
                 }).addOnFailureListener(e -> {
-            Log.i(TAG, e.getMessage());
-        });
+                    Log.i(TAG, e.getMessage());
+                });
     }
 
 
@@ -140,12 +145,13 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     }
 
     public float translateX(float x) {
-        //if (overlay.facing == CameraSource.CAMERA_FACING_FRONT) {
-        return canvas.getWidth() - scaleX(x);
-        // } else {
-        //return scaleX(x);
-        //}
+        if (lens == CameraX.LensFacing.FRONT) {
+            return canvas.getWidth() - scaleX(x);
+        } else {
+            return scaleX(x);
+        }
     }
+
 
     private void drawContours(List<FirebaseVisionPoint> points) {
         int counter = 0;

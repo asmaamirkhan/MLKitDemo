@@ -42,7 +42,6 @@ public class FaceDetectionActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
         }
-        // tv.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> updateTransform());
     }
 
     @SuppressLint("RestrictedApi")
@@ -90,36 +89,10 @@ public class FaceDetectionActivity extends AppCompatActivity {
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
         imageAnalysis.setAnalyzer(Runnable::run,
-                new MLKitAnalyzer(this, tv, iv));
+                new MLKitAnalyzer(this, tv, iv, lens));
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
-    /*private void updateTransform() {
-        Matrix mat = new Matrix();
-        float centerX = tv.getWidth() / 2.0f;
-        float centerY = tv.getHeight() / 2.0f;
-
-        float rotationDegrees;
-        switch (tv.getDisplay().getRotation()) {
-            case Surface.ROTATION_0:
-                rotationDegrees = 0;
-                break;
-            case Surface.ROTATION_90:
-                rotationDegrees = 90;
-                break;
-            case Surface.ROTATION_180:
-                rotationDegrees = 180;
-                break;
-            case Surface.ROTATION_270:
-                rotationDegrees = 270;
-                break;
-            default:
-                return;
-        }
-        mat.postRotate(-rotationDegrees, centerX, centerY);
-        tv.setTransform(mat);
-
-    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
