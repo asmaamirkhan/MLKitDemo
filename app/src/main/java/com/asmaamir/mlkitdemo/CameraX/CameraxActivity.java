@@ -1,4 +1,4 @@
-package com.asmaamir.mlkitdemo;
+package com.asmaamir.mlkitdemo.CameraX;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -27,6 +27,8 @@ import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.asmaamir.mlkitdemo.R;
 
 import java.io.File;
 

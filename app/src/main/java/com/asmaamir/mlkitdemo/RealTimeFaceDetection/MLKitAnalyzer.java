@@ -1,4 +1,4 @@
-package com.asmaamir.mlkitdemo;
+package com.asmaamir.mlkitdemo.RealTimeFaceDetection;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

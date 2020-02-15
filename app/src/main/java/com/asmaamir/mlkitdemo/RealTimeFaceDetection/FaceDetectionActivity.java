@@ -1,4 +1,4 @@
-package com.asmaamir.mlkitdemo;
+package com.asmaamir.mlkitdemo.RealTimeFaceDetection;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -21,6 +21,8 @@ import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.asmaamir.mlkitdemo.R;
 
 public class FaceDetectionActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PERMISSION = 101;

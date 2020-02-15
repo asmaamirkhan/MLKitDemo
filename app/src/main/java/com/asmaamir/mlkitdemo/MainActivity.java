@@ -8,6 +8,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.asmaamir.mlkitdemo.CameraX.CameraxActivity;
+import com.asmaamir.mlkitdemo.RealTimeFaceDetection.FaceDetectionActivity;
 import com.google.android.material.navigation.NavigationView;
 
 
