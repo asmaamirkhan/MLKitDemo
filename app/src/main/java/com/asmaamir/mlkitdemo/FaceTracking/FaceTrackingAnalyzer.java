@@ -25,12 +25,11 @@ import java.util.List;
 
 public class FaceTrackingAnalyzer implements ImageAnalysis.Analyzer {
     private static final String TAG = "MLKitFacesAnalyzer";
-    private FirebaseVisionFaceDetector faceDetector;
     private TextureView tv;
     private ImageView iv;
     private Bitmap bitmap;
     private Canvas canvas;
-    private Paint dotPaint, linePaint;
+    private Paint linePaint;
     private float widthScaleFactor = 1.0f;
     private float heightScaleFactor = 1.0f;
     private FirebaseVisionImage fbImage;
@@ -59,7 +58,7 @@ public class FaceTrackingAnalyzer implements ImageAnalysis.Analyzer {
                 .Builder()
                 .enableTracking()
                 .build();
-        faceDetector = FirebaseVision.getInstance().getVisionFaceDetector(detectorOptions);
+        FirebaseVisionFaceDetector faceDetector = FirebaseVision.getInstance().getVisionFaceDetector(detectorOptions);
         faceDetector.detectInImage(fbImage).addOnSuccessListener(firebaseVisionFaces -> {
             if (!firebaseVisionFaces.isEmpty()) {
                 processFaces(firebaseVisionFaces);
@@ -76,6 +75,7 @@ public class FaceTrackingAnalyzer implements ImageAnalysis.Analyzer {
         linePaint.setColor(Color.GREEN);
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(2f);
+        linePaint.setTextSize(40);
         widthScaleFactor = canvas.getWidth() / (fbImage.getBitmap().getWidth() * 1.0f);
         heightScaleFactor = canvas.getHeight() / (fbImage.getBitmap().getHeight() * 1.0f);
     }
@@ -87,6 +87,10 @@ public class FaceTrackingAnalyzer implements ImageAnalysis.Analyzer {
                     (int) translateY(face.getBoundingBox().top),
                     (int) translateX(face.getBoundingBox().right),
                     (int) translateY(face.getBoundingBox().bottom));
+            canvas.drawText(String.valueOf(face.getTrackingId()),
+                    translateX(face.getBoundingBox().centerX()),
+                    translateY(face.getBoundingBox().centerY()),
+                    linePaint);
             canvas.drawRect(box, linePaint);
         }
         iv.setImageBitmap(bitmap);
