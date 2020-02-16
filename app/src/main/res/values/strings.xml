@@ -7,6 +7,7 @@
     <string name="mlkit">ML Kit | Face Detection</string>
     <string name="realtime_face_detection">Real Time Face Detection</string>
     <string name="capture_face_detection">Capturing &amp; Face Detection</string>
+    <string name="face_tracking">Face Detection and Tracking</string>
     <string name="mlkit_object">ML Kit | Object Detection</string>
     <string name="realtime_object_detection">Real Time Object Detection</string>
 </resources>
