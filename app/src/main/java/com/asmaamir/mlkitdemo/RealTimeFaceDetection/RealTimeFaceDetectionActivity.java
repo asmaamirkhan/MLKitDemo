@@ -90,7 +90,7 @@ public class RealTimeFaceDetectionActivity extends AppCompatActivity {
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
         imageAnalysis.setAnalyzer(Runnable::run,
-                new MLKitAnalyzer(tv, iv, lens));
+                new MLKitAnalyzerFaces(tv, iv, lens));
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 

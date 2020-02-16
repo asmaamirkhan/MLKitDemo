@@ -24,8 +24,8 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 
 import java.util.List;
 
-public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
-    private static final String TAG = "MLKitAnalyzer";
+public class MLKitAnalyzerFaces implements ImageAnalysis.Analyzer {
+    private static final String TAG = "MLKitAnalyzerFaces";
     private FirebaseVisionFaceDetector faceDetector;
     private TextureView tv;
     private ImageView iv;
@@ -37,7 +37,7 @@ public class MLKitAnalyzer implements ImageAnalysis.Analyzer {
     private FirebaseVisionImage fbImage;
     private CameraX.LensFacing lens;
 
-    MLKitAnalyzer(TextureView tv, ImageView iv, CameraX.LensFacing lens) {
+    MLKitAnalyzerFaces(TextureView tv, ImageView iv, CameraX.LensFacing lens) {
         this.tv = tv;
         this.iv = iv;
         this.lens = lens;
