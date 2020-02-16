@@ -135,23 +135,16 @@ public class MLKitFacesAnalyzer implements ImageAnalysis.Analyzer {
         }
     }
 
-    public float scaleY(float vertical) {
-        return vertical * heightScaleFactor;
+    private float translateY(float y) {
+        return y * heightScaleFactor;
     }
 
-    public float scaleX(float horizontal) {
-        return horizontal * widthScaleFactor;
-    }
-
-    public float translateY(float y) {
-        return scaleY(y);
-    }
-
-    public float translateX(float x) {
+    private float translateX(float x) {
+        float scaledX = x * widthScaleFactor;
         if (lens == CameraX.LensFacing.FRONT) {
-            return canvas.getWidth() - scaleX(x);
+            return canvas.getWidth() - scaledX;
         } else {
-            return scaleX(x);
+            return scaledX;
         }
     }
 
