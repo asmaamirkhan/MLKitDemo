@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">MLKitDemo</string>
     <string name="camerax">CameraX</string>
-    <string name="cam_analyze">Camera with analyzer</string>
+    <string name="cam_analyze">Camera With Analyzer</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="mlkit">ML-Kit | Face Detection</string>
+    <string name="mlkit">ML Kit | Face Detection</string>
     <string name="realtime_face_detection">Real Time Face Detection</string>
     <string name="capture_face_detection">Capturing &amp; Face Detection</string>
+    <string name="mlkit_object">ML Kit | Object Detection</string>
+    <string name="realtime_object_detection">Real Time Object Detection</string>
 </resources>

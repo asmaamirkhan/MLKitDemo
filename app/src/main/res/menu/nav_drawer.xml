@@ -21,4 +21,12 @@
                 android:title="@string/capture_face_detection" />
         </menu>
     </item>
+    <item android:title="@string/mlkit_object">
+        <menu>
+            <item
+                android:id="@+id/realtime_object_detection"
+                android:icon="@drawable/object_icon"
+                android:title="@string/realtime_object_detection" />
+        </menu>
+    </item>
 </menu>
