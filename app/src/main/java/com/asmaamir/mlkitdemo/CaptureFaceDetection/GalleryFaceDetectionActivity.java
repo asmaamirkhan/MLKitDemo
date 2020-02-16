@@ -41,7 +41,6 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_CODE = 100;
     private ImageView imageView;
     private ImageView imageViewCanvas;
-    private ImageButton imageButton;
     private FirebaseVisionImage image;
     private Bitmap bitmap;
     private Canvas canvas;
@@ -61,12 +60,10 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
 
     private void initViews() {
         imageView = findViewById(R.id.img_view_pick);
-        imageButton = findViewById(R.id.img_btn_pick);
+        ImageButton imageButton = findViewById(R.id.img_btn_pick);
         imageViewCanvas = findViewById(R.id.img_view_pick_canvas);
         textView = findViewById(R.id.tv_props);
-        imageButton.setOnClickListener(v -> {
-            pickImage();
-        });
+        imageButton.setOnClickListener(v -> pickImage());
     }
 
     private void pickImage() {
@@ -79,22 +76,19 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_CODE) {
-            imageView.setImageURI(data.getData());
-            //imageViewCanvas.setImageURI(data.getData());
-            Bitmap bitmap = BitmapFactory.decodeFile(data.getData().getPath().replace("/raw/", ""));
-            Bitmap scaledImage = Bitmap.createScaledBitmap(bitmap, imageView.getWidth(), imageView.getHeight(), false);
-            //FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(scaledImage);
-            textView.setText("Classes: ");
-            try {
-                image = FirebaseVisionImage.fromFilePath(this, data.getData());
-                Log.i(TAG, image.getBitmap().getWidth() + "  " + image.getBitmap().getHeight());
-                initDetector(image);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (data != null) {
+                imageView.setImageURI(data.getData());
+                Bitmap bitmap = BitmapFactory.decodeFile(data.getData().getPath().replace("/raw/", ""));
+                Bitmap scaledImage = Bitmap.createScaledBitmap(bitmap, imageView.getWidth(), imageView.getHeight(), false);
+                textView.setText("Classes: ");
+                try {
+                    image = FirebaseVisionImage.fromFilePath(this, data.getData());
+                    Log.i(TAG, image.getBitmap().getWidth() + "  " + image.getBitmap().getHeight());
+                    initDetector(image);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
-            //imageView.setImageBitmap(scaledImage);
-
         }
     }
 
