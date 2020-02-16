@@ -48,6 +48,9 @@ dependencies {
     // for mlkit object detection
     implementation 'com.google.firebase:firebase-ml-vision-object-detection-model:19.0.3'
 
+    // for ml kit custom model
+    implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.1'
+
     // for camerax
     def camerax_version = '1.0.0-alpha06'
     implementation "androidx.camera:camera-core:${camerax_version}"
