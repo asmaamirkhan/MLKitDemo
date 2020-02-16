@@ -3,7 +3,6 @@ package com.asmaamir.mlkitdemo.CaptureFaceDetection;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,11 +32,13 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private static final String TAG = "PickActivity";
     public static final int REQUEST_CODE_PERMISSION = 111;
-    public static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"};
+    public static final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.READ_EXTERNAL_STORAGE"};
     private static final int PICK_IMAGE_CODE = 100;
     private ImageView imageView;
     private ImageView imageViewCanvas;
@@ -78,12 +79,9 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_CODE) {
             if (data != null) {
                 imageView.setImageURI(data.getData());
-                Bitmap bitmap = BitmapFactory.decodeFile(data.getData().getPath().replace("/raw/", ""));
-                Bitmap scaledImage = Bitmap.createScaledBitmap(bitmap, imageView.getWidth(), imageView.getHeight(), false);
                 textView.setText("Classes: ");
                 try {
-                    image = FirebaseVisionImage.fromFilePath(this, data.getData());
-                    Log.i(TAG, image.getBitmap().getWidth() + "  " + image.getBitmap().getHeight());
+                    image = FirebaseVisionImage.fromFilePath(this, Objects.requireNonNull(data.getData()));
                     initDetector(image);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -119,7 +117,6 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     private void processFaces(List<FirebaseVisionFace> faces) {
         Log.i(TAG, "Size" + faces.size());
         for (FirebaseVisionFace face : faces) {
-            Log.i(TAG, "" + face.getContour(FirebaseVisionFaceContour.ALL_POINTS).getPoints().size() + "  " + image.getBitmap().getWidth());
             getProps(face);
             drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR));
             drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EAR));
@@ -175,10 +172,7 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
 
     private void drawContours(List<FirebaseVisionPoint> points) {
         int counter = 0;
-        //Log.i(TAG, "" + points.size() + "  " + image.getBitmap().getWidth());
-
         for (FirebaseVisionPoint point : points) {
-
             if (counter != points.size() - 1) {
                 canvas.drawLine(point.getX(),
                         point.getY(),
@@ -198,7 +192,9 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     }
 
     private void initDrawingUtils() {
-        bitmap = Bitmap.createBitmap(image.getBitmap().getWidth(), image.getBitmap().getHeight(), Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(image.getBitmap().getWidth(),
+                image.getBitmap().getHeight(),
+                Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         dotPaint = new Paint();
         dotPaint.setColor(Color.RED);
