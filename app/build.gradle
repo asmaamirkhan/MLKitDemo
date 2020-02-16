@@ -41,7 +41,12 @@ dependencies {
 
     // for mlkit
     implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
+
+    // for mlkit face detection
     implementation 'com.google.firebase:firebase-ml-vision-face-model:19.0.0'
+
+    // for mlkit object detection
+    implementation 'com.google.firebase:firebase-ml-vision-object-detection-model:19.0.3'
 
     // for camerax
     def camerax_version = '1.0.0-alpha06'
