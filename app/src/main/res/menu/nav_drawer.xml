@@ -33,4 +33,12 @@
                 android:title="@string/realtime_object_detection" />
         </menu>
     </item>
+    <item android:title="@string/custom_model">
+        <menu>
+            <item
+                android:id="@+id/image_classification"
+                android:icon="@drawable/custom_icon"
+                android:title="@string/image_classification" />
+        </menu>
+    </item>
 </menu>

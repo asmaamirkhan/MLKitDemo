@@ -10,4 +10,6 @@
     <string name="face_tracking">Face Detection and Tracking</string>
     <string name="mlkit_object">ML Kit | Object Detection</string>
     <string name="realtime_object_detection">Real Time Object Detection</string>
+    <string name="custom_model">Custom Model</string>
+    <string name="image_classification">Image Classification</string>
 </resources>

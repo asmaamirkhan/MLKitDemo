@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FaceTracking.FaceTrackingActivity"></activity>
+        <activity android:name=".ImageClassificationCustomModel.ImageClassificationActivity"></activity>
+        <activity android:name=".FaceTracking.FaceTrackingActivity" />
         <activity android:name=".RealTimeObjectDetection.RealTimeObjectDetectionActivity" />
         <activity android:name=".CaptureFaceDetection.GalleryFaceDetectionActivity" />
         <activity android:name=".RealTimeFaceDetection.RealTimeFaceDetectionActivity" />
