@@ -2,6 +2,7 @@ package com.asmaamir.mlkitdemo.ImageClassificationCustomModel;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraInfoUnavailableException;
 import androidx.camera.core.CameraX;
@@ -23,6 +25,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.asmaamir.mlkitdemo.R;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
+import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class ImageClassificationActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PERMISSION = 101;
@@ -30,6 +41,7 @@ public class ImageClassificationActivity extends AppCompatActivity {
     private TextureView tv;
     private ImageView iv;
     private static final String TAG = "ImageClassificationActivity";
+    private ArrayList<String> labelList = new ArrayList<>();
 
     public static CameraX.LensFacing lens = CameraX.LensFacing.BACK;
 
@@ -48,8 +60,9 @@ public class ImageClassificationActivity extends AppCompatActivity {
 
     @SuppressLint("RestrictedApi")
     private void startCamera() {
+        loadModel();
         initCamera();
-        ImageButton ibSwitch = findViewById(R.id.btn_switch_face);
+        ImageButton ibSwitch = findViewById(R.id.btn_switch_classification);
         ibSwitch.setOnClickListener(v -> {
             if (lens == CameraX.LensFacing.FRONT)
                 lens = CameraX.LensFacing.BACK;
@@ -63,6 +76,43 @@ public class ImageClassificationActivity extends AppCompatActivity {
                 Log.e(TAG, e.toString());
             }
         });
+    }
+
+    @WorkerThread
+    private void getLabels() throws IOException {
+        InputStream inputStream = getResources().openRawResource(R.raw.labels);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String eachLine = bufferedReader.readLine();
+        while (eachLine != null) {
+            labelList.add(eachLine);
+        }
+    }
+
+    private void loadModel() {
+        FirebaseModelDownloadConditions.Builder conditionsBuilder = new FirebaseModelDownloadConditions
+                .Builder()
+                .requireWifi();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // Enable advanced conditions on Android Nougat and newer.
+            conditionsBuilder = conditionsBuilder
+                    .requireCharging()
+                    .requireDeviceIdle();
+        }
+        FirebaseModelDownloadConditions conditions = conditionsBuilder.build();
+
+        FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel
+                .Builder("mobilenet").build();
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener(task -> {
+                    Log.i(TAG, "Model is downloaded successfully");
+                }).addOnFailureListener(e -> {
+            Log.i(TAG, e.toString());
+        });
+        /*try {
+            getLabels();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     private void initCamera() {
