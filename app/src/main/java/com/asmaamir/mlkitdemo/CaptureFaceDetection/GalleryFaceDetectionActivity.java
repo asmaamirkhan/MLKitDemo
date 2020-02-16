@@ -106,7 +106,6 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
                 .addOnSuccessListener(firebaseVisionFaces -> {
                     if (!firebaseVisionFaces.isEmpty()) {
                         processFaces(firebaseVisionFaces);
-                        Log.i(TAG, "DONE");
                     } else {
                         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.MULTIPLY);
                         Log.i(TAG, "No faces");
@@ -115,7 +114,6 @@ public class GalleryFaceDetectionActivity extends AppCompatActivity {
     }
 
     private void processFaces(List<FirebaseVisionFace> faces) {
-        Log.i(TAG, "Size" + faces.size());
         for (FirebaseVisionFace face : faces) {
             getProps(face);
             drawLandMark(face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR));
