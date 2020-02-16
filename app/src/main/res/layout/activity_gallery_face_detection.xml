@@ -1,46 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CaptureFaceDetection.GalleryFaceDetectionActivity">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/img_view_pick"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <ImageView
-            android:id="@+id/img_view_pick"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/img_view_pick_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <ImageView
-            android:id="@+id/img_view_pick_canvas"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <ImageButton
+        android:id="@+id/img_btn_pick"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/camera" />
 
-        <ImageButton
-            android:id="@+id/img_btn_pick"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/camera" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_props"
-            android:text="Classes: " />
-    </RelativeLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
+    <TextView
+        android:id="@+id/tv_props"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_drawer" />
+        android:layout_height="wrap_content"
+        android:text="Classes: " />
+</RelativeLayout>
 
-</androidx.drawerlayout.widget.DrawerLayout>
