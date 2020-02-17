@@ -39,6 +39,10 @@
                 android:id="@+id/image_classification"
                 android:icon="@drawable/custom_icon"
                 android:title="@string/image_classification" />
+            <item
+                android:id="@+id/image_classification_local"
+                android:icon="@drawable/custom_icon"
+                android:title="@string/image_classification_local" />
         </menu>
     </item>
 </menu>
