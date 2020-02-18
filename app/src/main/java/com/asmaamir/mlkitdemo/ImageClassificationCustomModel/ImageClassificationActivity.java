@@ -19,12 +19,16 @@ import androidx.camera.core.CameraInfoUnavailableException;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageAnalysisConfig;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.asmaamir.mlkitdemo.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.common.FirebaseMLException;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
@@ -34,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageClassificationActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_PERMISSION = 101;
@@ -42,7 +47,7 @@ public class ImageClassificationActivity extends AppCompatActivity {
     private ImageView iv;
     private static final String TAG = "ImageClassificationActivity";
     private ArrayList<String> labelList = new ArrayList<>();
-
+    CustomImageClassifier classifier;
     public static CameraX.LensFacing lens = CameraX.LensFacing.BACK;
 
     @Override
@@ -51,16 +56,22 @@ public class ImageClassificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_classification);
         tv = findViewById(R.id.texture_view_classification);
         iv = findViewById(R.id.image_view_classification);
-        if (allPermissionsGranted()) {
-            tv.post(this::startCamera);
-        } else {
-            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
+        try {
+            classifier = new CustomImageClassifier(this, false);
+            if (allPermissionsGranted()) {
+                tv.post(this::startCamera);
+            } else {
+                ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
+            }
+        } catch (FirebaseMLException e) {
+            e.printStackTrace();
         }
+
     }
 
     @SuppressLint("RestrictedApi")
     private void startCamera() {
-        loadModel();
+        //loadModel();
         initCamera();
         ImageButton ibSwitch = findViewById(R.id.btn_switch_classification);
         ibSwitch.setOnClickListener(v -> {
@@ -76,6 +87,7 @@ public class ImageClassificationActivity extends AppCompatActivity {
                 Log.e(TAG, e.toString());
             }
         });
+
     }
 
     @WorkerThread
@@ -139,11 +151,34 @@ public class ImageClassificationActivity extends AppCompatActivity {
                 .build();
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
-        imageAnalysis.setAnalyzer(Runnable::run,
-                new ImageClassificationAnalyzer(tv, iv, lens));
+        //imageAnalysis.setAnalyzer(Runnable::run,
+        //        new ImageClassificationAnalyzer(tv, iv, lens));
+        imageAnalysis.setAnalyzer(Runnable::run, new ImageAnalysis.Analyzer() {
+            @Override
+            public void analyze(ImageProxy image, int rotationDegrees) {
+                classify(image);
+            }
+        });
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
+    private void classify(ImageProxy image) {
+        try {
+            new CustomImageClassifier(this, false).classifyFrame(image.getPlanes()[0].getBuffer(), image.getWidth(), image.getHeight()).addOnSuccessListener(new OnSuccessListener<List<String>>() {
+                @Override
+                public void onSuccess(List<String> strings) {
+                    Log.i(TAG, strings.get(0));
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i(TAG, e.getMessage());
+                }
+            });
+        } catch (FirebaseMLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

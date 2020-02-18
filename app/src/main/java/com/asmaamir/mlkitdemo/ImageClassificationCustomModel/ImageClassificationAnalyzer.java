@@ -2,9 +2,7 @@ package com.asmaamir.mlkitdemo.ImageClassificationCustomModel;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.TextureView;
 import android.widget.ImageView;
 
@@ -12,14 +10,7 @@ import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
-import com.google.firebase.ml.common.FirebaseMLException;
-import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
-import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
-import com.google.firebase.ml.custom.FirebaseModelDataType;
-import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
-import com.google.firebase.ml.custom.FirebaseModelInputs;
 import com.google.firebase.ml.custom.FirebaseModelInterpreter;
-import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
 import java.nio.ByteBuffer;
@@ -61,13 +52,16 @@ public class ImageClassificationAnalyzer implements ImageAnalysis.Analyzer {
         buffer = image.getPlanes()[0].getBuffer();
 
         int rotation = degreesToFirebaseRotation(rotationDegrees);
+        //classify();
         //fbImage = FirebaseVisionImage.fromMediaImage(image.getImage(), rotation);
-        initDrawingUtils();
-        runInference();
+        //initDrawingUtils();
+        //runInference();
     }
 
 
-    private void runInference() {
+
+
+   /* private void runInference() {
         FirebaseCustomRemoteModel remoteModel = new FirebaseCustomRemoteModel
                 .Builder("mobilenet").build();
         FirebaseModelManager.getInstance().isModelDownloaded(remoteModel).addOnSuccessListener(aBoolean -> {
@@ -109,10 +103,10 @@ public class ImageClassificationAnalyzer implements ImageAnalysis.Analyzer {
         });
 
 
-    }
+    }*/
 
 
-    private void initDrawingUtils() {
+   /* private void initDrawingUtils() {
         bitmap = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         dotPaint = new Paint();
@@ -135,7 +129,7 @@ public class ImageClassificationAnalyzer implements ImageAnalysis.Analyzer {
         } else {
             return scaledX;
         }
-    }
+    }*/
 
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {

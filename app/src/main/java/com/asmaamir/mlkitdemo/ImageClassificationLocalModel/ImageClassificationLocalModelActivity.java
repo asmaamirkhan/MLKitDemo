@@ -20,15 +20,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.asmaamir.mlkitdemo.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.FirebaseMLException;
-import com.google.firebase.ml.custom.FirebaseCustomLocalModel;
-import com.google.firebase.ml.custom.FirebaseModelDataType;
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
 import com.google.firebase.ml.custom.FirebaseModelInputs;
 import com.google.firebase.ml.custom.FirebaseModelInterpreter;
-import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 public class ImageClassificationLocalModelActivity extends AppCompatActivity {
     private static final String TAG = "ImageClassificationLocalModel";
@@ -43,12 +43,16 @@ public class ImageClassificationLocalModelActivity extends AppCompatActivity {
     private Paint dotPaint, linePaint;
     private TextView textView;
     private static final int DIM_BATCH_SIZE = 1;
-    private static final int DIM_PIXEL_SIZE = 1;
-    private static final int DIM_IMG_SIZE_X = 1;
-    private static final int DIM_IMG_SIZE_Y = 1;
-    private ByteBuffer buffer;
-    FirebaseModelInterpreter interpreter;
-    FirebaseModelInputOutputOptions options;
+    private static final int DIM_PIXEL_SIZE = 3;
+    private static final int DIM_IMG_SIZE_X = 299;
+    private static final int DIM_IMG_SIZE_Y = 299;
+    private static final int QUANT_NUM_OF_BYTES_PER_CHANNEL = 1;
+    private static final int FLOAT_NUM_OF_BYTES_PER_CHANNEL = 4;
+    private final int[] intValues = new int[DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y];
+    private ByteBuffer imgData;
+    private FirebaseModelInterpreter interpreter;
+    private FirebaseModelInputOutputOptions options;
+    private CustomImageClassifier classifier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +60,12 @@ public class ImageClassificationLocalModelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_classification_local_model);
         if (allPermissionsGranted()) {
             initViews();
-            loadModel();
+            //loadModel();
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSION);
         }
     }
 
-    private void loadModel() {
-        FirebaseCustomLocalModel localModel = new FirebaseCustomLocalModel
-                .Builder()
-                .setAssetFilePath("mobilenet.tflite")
-                .build();
-
-        try {
-            FirebaseModelInterpreterOptions interpreterOptions = new FirebaseModelInterpreterOptions.Builder(localModel).build();
-            interpreter = FirebaseModelInterpreter.getInstance(interpreterOptions);
-            int[] inputs = new int[]{DIM_BATCH_SIZE, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y, DIM_PIXEL_SIZE};
-            int[] outputs = new int[]{DIM_BATCH_SIZE, 1001};
-            options = new FirebaseModelInputOutputOptions
-                    .Builder()
-                    .setInputFormat(0, FirebaseModelDataType.BYTE, inputs)
-                    .setOutputFormat(0, FirebaseModelDataType.BYTE, outputs)
-                    .build();
-        } catch (FirebaseMLException e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
 
     private void initViews() {
         imageView = findViewById(R.id.img_view_pick_local);
@@ -89,7 +73,12 @@ public class ImageClassificationLocalModelActivity extends AppCompatActivity {
         imageViewCanvas = findViewById(R.id.img_view_pick_canvas_local);
         textView = findViewById(R.id.tv_props_local);
         imageButton.setOnClickListener(v -> pickImage());
-
+        try {
+            classifier = new CustomImageClassifier(this, true);
+        } catch (FirebaseMLException e) {
+            Log.e("ESMA", "FAIL");
+            e.printStackTrace();
+        }
     }
 
     private void pickImage() {
@@ -98,23 +87,34 @@ public class ImageClassificationLocalModelActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_CODE);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_CODE) {
             if (data != null) {
                 imageView.setImageURI(data.getData());
-                textView.setText("Classes: ");
                 BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                bitmap = drawable.getBitmap();
-                int size = bitmap.getRowBytes() * bitmap.getHeight();
-                buffer = ByteBuffer.allocate(size);
+                Bitmap bitmap = drawable.getBitmap();
+                int bytes = bitmap.getByteCount();
+                ByteBuffer buffer = ByteBuffer.allocate(bytes);
                 bitmap.copyPixelsToBuffer(buffer);
-                //image = FirebaseVisionImage.fromFilePath(this, Objects.requireNonNull(data.getData()));
-                Log.i(TAG, data.getData().getPath());
-                //BitmapFactory.decodeFile(data.getData().getPath().replace("/raw/", "")).copyPixelsToBuffer(buffer);
-                runModel();
-
+                try {
+                    classifier
+                            .classifyFrame(buffer, imageView.getWidth(), imageView.getHeight()).addOnSuccessListener(new OnSuccessListener<List<String>>() {
+                        @Override
+                        public void onSuccess(List<String> strings) {
+                            Log.i(TAG, strings.get(0));
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    });
+                } catch (FirebaseMLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -124,7 +124,7 @@ public class ImageClassificationLocalModelActivity extends AppCompatActivity {
 
             FirebaseModelInputs inputImage = new FirebaseModelInputs
                     .Builder()
-                    .add(buffer)
+                    .add(imgData)
                     .build();
             Log.i(TAG, "Starting run model");
             interpreter.run(inputImage, options).addOnSuccessListener(firebaseModelOutputs -> {
