@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CustomModel.CustomModelActivity"></activity>
+        <activity android:name=".CustomModelClassification.CustomModelActivityClassification"></activity>
         <activity android:name=".ImageClassificationLocalModel.ImageClassificationLocalModelActivity" />
         <activity android:name=".ImageClassificationCustomModel.ImageClassificationActivity" />
         <activity android:name=".FaceTracking.FaceTrackingActivity" />

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomModel.CustomModelActivity">
+    tools:context=".CustomModelClassification.CustomModelActivityClassification">
 
     <ImageView
         android:id="@+id/img_view_pick_custom"
