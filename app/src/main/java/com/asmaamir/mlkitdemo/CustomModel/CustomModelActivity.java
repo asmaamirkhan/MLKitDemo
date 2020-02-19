@@ -61,7 +61,7 @@ public class CustomModelActivity extends AppCompatActivity {
         imageView = findViewById(R.id.img_view_pick_custom);
         ImageButton imageButton = findViewById(R.id.img_btn_pick_custom);
         imageViewCanvas = findViewById(R.id.img_view_pick_canvas_custom);
-        textView = findViewById(R.id.tv_props_local);
+        textView = findViewById(R.id.tv_props_custom);
         imageButton.setOnClickListener(v -> pickImage());
 
     }
