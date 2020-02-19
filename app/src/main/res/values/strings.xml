@@ -11,6 +11,6 @@
     <string name="mlkit_object">ML Kit | Object Detection</string>
     <string name="realtime_object_detection">Real Time Object Detection</string>
     <string name="custom_model">Custom Model</string>
-    <string name="image_classification">Image Classification</string>
+    <string name="object_detection_local">Object Detection | Local</string>
     <string name="image_classification_local">Image Classification | Local</string>
 </resources>
