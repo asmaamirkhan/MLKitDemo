@@ -11,9 +11,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.asmaamir.mlkitdemo.CameraX.CameraxActivity;
 import com.asmaamir.mlkitdemo.CaptureFaceDetection.GalleryFaceDetectionActivity;
+import com.asmaamir.mlkitdemo.CustomModel.CustomModelActivity;
 import com.asmaamir.mlkitdemo.FaceTracking.FaceTrackingActivity;
 import com.asmaamir.mlkitdemo.ImageClassificationCustomModel.ImageClassificationActivity;
-import com.asmaamir.mlkitdemo.ImageClassificationLocalModel.ImageClassificationLocalModelActivity;
 import com.asmaamir.mlkitdemo.RealTimeFaceDetection.RealTimeFaceDetectionActivity;
 import com.asmaamir.mlkitdemo.RealTimeObjectDetection.RealTimeObjectDetectionActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                             switchActivity(ImageClassificationActivity.class);
                             return true;
                         case R.id.image_classification_local:
-                            switchActivity(ImageClassificationLocalModelActivity.class);
+                            switchActivity(CustomModelActivity.class);
                             return true;
                         default:
                             return false;
