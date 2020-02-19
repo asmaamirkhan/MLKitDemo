@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,22 +32,11 @@ import java.io.InputStreamReader;
 public class CustomModelActivityClassification extends AppCompatActivity {
     private static final String TAG = "CustomModelActivityClassification";
     private static final int PICK_IMAGE_CODE = 100;
-
-    private ImageView imageView;
-    private ImageView imageViewCanvas;
-    private TextView textView;
-    /**
-     * Number of results to show in the UI.
-     */
-    private int RESULTS_TO_SHOW = 3;
-
-    /**
-     * Dimensions of inputs.
-     */
     private int DIM_BATCH_SIZE = 1;
     private int DIM_PIXEL_SIZE = 3;
     private int DIM_IMG_SIZE_X = 224;
     private int DIM_IMG_SIZE_Y = 224;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +48,7 @@ public class CustomModelActivityClassification extends AppCompatActivity {
     private void initViews() {
         imageView = findViewById(R.id.img_view_pick_custom);
         ImageButton imageButton = findViewById(R.id.img_btn_pick_custom);
-        imageViewCanvas = findViewById(R.id.img_view_pick_canvas_custom);
-        textView = findViewById(R.id.tv_props_custom);
         imageButton.setOnClickListener(v -> pickImage());
-
     }
 
     private void pickImage() {
