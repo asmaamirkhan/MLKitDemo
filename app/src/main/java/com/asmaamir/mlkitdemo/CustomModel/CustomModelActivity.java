@@ -119,7 +119,8 @@ public class CustomModelActivity extends AppCompatActivity {
                                         new InputStreamReader(getAssets().open("labels.txt")));
                                 for (int i = 0; i < probabilities.length; i++) {
                                     String label = reader.readLine();
-                                    Log.i("MLKit", String.format("%s: %d", label, probabilities[i]));
+                                    if ((probabilities[i] & 0xff) / 255.0f != 0)
+                                        Log.i("MLKit", String.format("%s: %1.4f", label, (probabilities[i] & 0xff) / 255.0f));
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
