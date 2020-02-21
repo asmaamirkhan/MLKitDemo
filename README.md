@@ -19,7 +19,7 @@ The app content various examples of ML-Kit (Vision part), each example is presen
 - [🔎 Real time object detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeObjectDetection)
   - 🌞 Object detection and classification
 
-### 🚀 Custom Models
+### 🚀 Custom Models (Local 📍)
 - [🎨 Image Classification (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelClassification)
   - [👀 Mobilenet V1 1.0 224 quant](https://www.tensorflow.org/lite/models/image_classification/overview#performance_benchmarks)
 - [🕵️‍♀️ Object Detection (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelDetecion)
