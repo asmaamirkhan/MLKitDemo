@@ -1,15 +1,18 @@
 # 🔥 MLKit Demo
 A demo app for Firebase ML-Kit which is a mobile SDK provided by Google to bring Google's machine learning expertise to mobile apps in a powerful yet easy-to-use way
 
-> Now it is in beta release 👩‍🔬
+> ML-kit is in beta release for now 👩‍🔬
 
 ## 📱 About the app
-The app content various examples of ML-Kit (Vision part), each example is presented as a single activity
+The app contains various examples of ML-Kit (Vision part), each example is presented as a single activity (All in one app 🤭)
 
 ## 💫 Available Examples
-### 💼 ML Kit Models
-- [📷 CameraX examlpe](app/src/main/java/com/asmaamir/mlkitdemo/CameraX)
+
+### 📸 Cmaera
+- [📷 CameraX example](app/src/main/java/com/asmaamir/mlkitdemo/CameraX)
   - 🤹‍♀️ Preview, Capture and Analyze functionality 
+
+### 💼 ML Kit Models
 - [⌚ Real time face detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeFaceDetection)
   - 👩‍🚀 Contour detecting
 - [🎴 Face detection from a picked image](app/src/main/java/com/asmaamir/mlkitdemo/CaptureFaceDetection)
@@ -30,7 +33,7 @@ The app content various examples of ML-Kit (Vision part), each example is presen
 - 🔎 Check out best practices that will be suitable to your project
 
 ## 🐞 Known Bug
-- 🙄 Face contour detection functionality can detect contours of only single face in the image 
+- 🙄 Face contour detection functionality can detect contours of an only single face in the image 
   - [StackOverFlow](https://stackoverflow.com/q/57203678)
 - 👩‍💻 Please tell me if you have a solution
 
