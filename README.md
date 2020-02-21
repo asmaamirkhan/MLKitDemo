@@ -1,5 +1,5 @@
 # 🔥 MLKit Demo
-A demo app for FireBase ML-Kit which is a mobile SDK provided by Google to bring Google's machine learning expertise to mobile apps in a powerful yet easy-to-use way
+A demo app for Firebase ML-Kit which is a mobile SDK provided by Google to bring Google's machine learning expertise to mobile apps in a powerful yet easy-to-use way
 
 > Now it is in beta release 👩‍🔬
 
