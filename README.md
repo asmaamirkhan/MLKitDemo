@@ -8,7 +8,7 @@ The app contains various examples of ML-Kit (Vision part), each example is prese
 
 ## 💫 Available Examples
 
-### 📸 Cmaera
+### 📸 Camera
 - [📷 CameraX example](app/src/main/java/com/asmaamir/mlkitdemo/CameraX)
   - 🤹‍♀️ Preview, Capture and Analyze functionality 
 
