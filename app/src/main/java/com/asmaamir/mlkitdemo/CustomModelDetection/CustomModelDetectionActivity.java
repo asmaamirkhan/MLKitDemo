@@ -1,4 +1,4 @@
-package com.asmaamir.mlkitdemo.CustomModelDetecion;
+package com.asmaamir.mlkitdemo.CustomModelDetection;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
