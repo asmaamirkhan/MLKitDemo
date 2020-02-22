@@ -9,24 +9,21 @@ The app contains various examples of ML-Kit (Vision part), each example is prese
 ## 💫 Available Examples
 
 ### 📸 Camera
-- [📷 CameraX example](app/src/main/java/com/asmaamir/mlkitdemo/CameraX)
-  - 🤹‍♀️ Preview, Capture and Analyze functionality 
+- [📷 CameraX example](app/src/main/java/com/asmaamir/mlkitdemo/CameraX): Preview, Capture and Analyze functionalities 🤹‍♀️ 
 
 ### 💼 ML Kit Models
-- [⌚ Real time face detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeFaceDetection)
-  - 👩‍🚀 Contour detecting
-- [🎴 Face detection from a picked image](app/src/main/java/com/asmaamir/mlkitdemo/CaptureFaceDetection)
-  - 🤓 Contour, landmarks and face classification
-- [🕵️‍♀️ Face detection and tracking](app/src/main/java/com/asmaamir/mlkitdemo/FaceTracking)
-  - 📹 Tracking faces over frames 
-- [🔎 Real time object detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeObjectDetection)
-  - 🌞 Object detection and classification
+- [👩‍🚀 Real time face detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeFaceDetection): Contour detecting 
+- [🎴 Face detection from a picked image](app/src/main/java/com/asmaamir/mlkitdemo/CaptureFaceDetection): Contour, landmarks and face classification
+- [🕵️‍♀️ Face detection and tracking](app/src/main/java/com/asmaamir/mlkitdemo/FaceTracking): Tracking faces over frames
+- [🌞 Real time object detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeObjectDetection): Object detection and classification
 
 ### 🚀 Custom Models (Local 📍)
 - [🎨 Image Classification (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelClassification)
-  - [👀 Mobilenet V1 1.0 224 quant](https://www.tensorflow.org/lite/models/image_classification/overview#performance_benchmarks)
-- [🕵️‍♀️ Object Detection (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelDetecion)
-  - [👀 COCO SSD MobileNet v1](https://www.tensorflow.org/lite/models/object_detection/overview#performance_benchmarks)
+- [🕵️‍♀️ Object Detection (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelDetection)
+
+#### 🎁 Used Models
+- Classification: [👀 Mobilenet V1 1.0 224 quant](https://www.tensorflow.org/lite/models/image_classification/overview#performance_benchmarks)
+- Object Detection: [👀 COCO SSD MobileNet v1](https://www.tensorflow.org/lite/models/object_detection/overview#performance_benchmarks)
 
 ## 🛑 Note
 - 👮‍♀️ Presented codes are not optimized, since it is a demo it aims **simplicity**
@@ -34,7 +31,7 @@ The app contains various examples of ML-Kit (Vision part), each example is prese
 
 ## 🐞 Known Bug
 - 🙄 Face contour detection functionality can detect contours of an only single face in the image 
-  - [StackOverFlow](https://stackoverflow.com/q/57203678)
+  - [👀 Stack Overflow](https://stackoverflow.com/q/57203678)
 - 👩‍💻 Please tell me if you have a solution
 
 ## 🤳 Screenshots
