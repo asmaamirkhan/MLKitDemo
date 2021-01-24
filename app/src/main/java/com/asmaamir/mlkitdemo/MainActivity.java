@@ -11,7 +11,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.asmaamir.mlkitdemo.CameraX.CameraxActivity;
 import com.asmaamir.mlkitdemo.CaptureFaceDetection.GalleryFaceDetectionActivity;
-import com.asmaamir.mlkitdemo.CustomModelClassification.CustomModelActivityClassification;
 import com.asmaamir.mlkitdemo.CustomModelDetection.CustomModelDetectionActivity;
 import com.asmaamir.mlkitdemo.FaceTracking.FaceTrackingActivity;
 import com.asmaamir.mlkitdemo.RealTimeFaceDetection.RealTimeFaceDetectionActivity;
@@ -63,11 +62,8 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.face_tracking:
                             switchActivity(FaceTrackingActivity.class);
                             return true;
-                        case R.id.object_detection_local:
+                        case R.id.object_detection_local_video:
                             switchActivity(CustomModelDetectionActivity.class);
-                            return true;
-                        case R.id.image_classification_local:
-                            switchActivity(CustomModelActivityClassification.class);
                             return true;
                         default:
                             return false;

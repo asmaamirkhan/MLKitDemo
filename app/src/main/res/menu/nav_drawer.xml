@@ -36,13 +36,9 @@
     <item android:title="@string/custom_model">
         <menu>
             <item
-                android:id="@+id/object_detection_local"
+                android:id="@+id/object_detection_local_video"
                 android:icon="@drawable/custom_icon"
-                android:title="@string/object_detection_local" />
-            <item
-                android:id="@+id/image_classification_local"
-                android:icon="@drawable/custom_icon"
-                android:title="@string/image_classification_local" />
+                android:title="@string/object_detection_local_video" />
         </menu>
     </item>
 </menu>

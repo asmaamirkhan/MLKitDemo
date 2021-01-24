@@ -13,4 +13,5 @@
     <string name="custom_model">Custom Model</string>
     <string name="object_detection_local">Object Detection | Local</string>
     <string name="image_classification_local">Image Classification | Local</string>
+    <string name="object_detection_local_video">Object Detection Video | Local</string>
 </resources>
