@@ -69,10 +69,7 @@ public class MLKitDetectionAnalyzer implements ImageAnalysis.Analyzer {
         try {
             Bitmap bitmap = fbImage.getBitmap();
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y, true);
-
             int batchNum = 0;
-
-
             byte[][][][] input = new byte[DIM_BATCH_SIZE][DIM_IMG_SIZE_X][DIM_IMG_SIZE_Y][DIM_PIXEL_SIZE];
             for (int x = 0; x < DIM_IMG_SIZE_X; x++) {
                 for (int y = 0; y < DIM_IMG_SIZE_Y; y++) {
@@ -83,13 +80,10 @@ public class MLKitDetectionAnalyzer implements ImageAnalysis.Analyzer {
                 }
             }
             FirebaseModelInputs inputs = new FirebaseModelInputs.Builder().add(input).build();
-
             runDet(inputs);
         } catch (FirebaseMLException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -158,9 +152,9 @@ public class MLKitDetectionAnalyzer implements ImageAnalysis.Analyzer {
         bitmap = Bitmap.createBitmap(tv.getWidth(), tv.getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         linePaint = new Paint();
-        linePaint.setColor(Color.GREEN);
+        linePaint.setColor(Color.RED);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(2f);
+        linePaint.setStrokeWidth(3f);
         linePaint.setTextSize(40);
         widthScaleFactor = canvas.getWidth() / (fbImage.getBitmap().getWidth() * 1.0f);
         heightScaleFactor = canvas.getHeight() / (fbImage.getBitmap().getHeight() * 1.0f);
