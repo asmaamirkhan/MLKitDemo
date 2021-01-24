@@ -18,11 +18,10 @@ The app contains various examples of ML-Kit (Vision part), each example is prese
 - [🌞 Real time object detection](app/src/main/java/com/asmaamir/mlkitdemo/RealTimeObjectDetection): Object detection and classification
 
 ### 🚀 Custom Models (Local 📍)
-- [🎨 Image Classification (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelClassification)
-- [🕵️‍♀️ Object Detection (Under development 👩‍🔬)](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelDetection)
+- [🕵️‍♀️ Object Detection](app/src/main/java/com/asmaamir/mlkitdemo/CustomModelDetection)
+> Still has drawing issue 🙄
 
 #### 🎁 Used Models
-- Classification: [👀 Mobilenet V1 1.0 224 quant](https://www.tensorflow.org/lite/models/image_classification/overview#performance_benchmarks)
 - Object Detection: [👀 COCO SSD MobileNet v1](https://www.tensorflow.org/lite/models/object_detection/overview#performance_benchmarks)
 
 ## 🛑 Note
@@ -35,17 +34,37 @@ The app contains various examples of ML-Kit (Vision part), each example is prese
 - 👩‍💻 Please tell me if you have a solution
 
 ## 🤳 Screenshots
-
+### 📝 Nav Menu
 <div float="left">
 	<img src="./res/all.png" width="200" />
+</div>
+
+### 👩‍🚀 Real Time Face Detection
+<div float="left">
 	<img src="./res/realtime_face_detection.png" width="200" />
+</div>
+
+### 🎴 Face Detection From a Picked Image
+<div float="left">
 	<img src="./res/pick_face_detection.png" width="200" />
 </div>
 
+### 🌞 Real Time Object Detection
 <div float="left">
 	<img src="./res/object_detection.png" width="200" />
+</div>
+
+
+### 🕵️‍♀️ Face Detection and Tracking
+<div float="left">
 	<img src="./res/track.gif" width="200" />
 </div>
+
+### 🚀 Custom Object Detection
+<div float="left">
+	<img src="./res/custom_det.jpg" width="200" />
+</div>
+
 
 ## 💼 Contact and Support
 Find me on [LinkedIn](https://www.linkedin.com/in/asmaamirkhan/) and feel free to mail me, [Asmaa 🦋](mailto:asmaamirkhan.am@gmail.com)
