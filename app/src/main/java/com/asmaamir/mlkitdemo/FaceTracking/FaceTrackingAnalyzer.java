@@ -91,11 +91,21 @@ public class FaceTrackingAnalyzer implements ImageAnalysis.Analyzer {
                     translateX(face.getBoundingBox().centerX()),
                     translateY(face.getBoundingBox().centerY()),
                     linePaint);
+            Log.i(TAG, "top: " + (int) translateY(face.getBoundingBox().top)
+                    + "left: " + (int) translateX(face.getBoundingBox().left)
+                    + "bottom: " + (int) translateY(face.getBoundingBox().bottom)
+                    + "right: " + (int) translateX(face.getBoundingBox().right));
+
+            Log.i(TAG, "top: " + face.getBoundingBox().top
+                    + " left: " + face.getBoundingBox().left
+                    + " bottom: " + face.getBoundingBox().bottom
+                    + " right: " + face.getBoundingBox().right);
+
             canvas.drawRect(box, linePaint);
         }
         iv.setImageBitmap(bitmap);
     }
-    
+
     private float translateY(float y) {
         return y * heightScaleFactor;
     }
